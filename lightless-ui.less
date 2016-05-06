@@ -1,8 +1,8 @@
 /*
 	Lightless UI
-	Project Page - http://
+	Project Page - https://github.com/kasparvihm/LightLess
 	Author - Kaspar Vihm
-	Site - www.kasparvihm-com
+	Site - www.kasparvihm.com
 */
 
 /* GLOBALS */
@@ -34,23 +34,20 @@ HTML, BODY {
 }
 
 /* Demo */
+
 #wrap {
 	max-width: 1024px;
 	margin: auto;
 	background: #dedede;
 	padding: 30px;
+	.demo {
+		[class*="col-"] {
+			background-color: #eee;
+			border: 1px solid #ddd;
+		}
+	}
 }
-[class*="col-"] {
-    padding-top: @column-spacing;
-    padding-bottom: @column-spacing;
-    background-color: #eee;
-    border: 1px solid #ddd;
-    padding-left:  floor((@gutter / 2));
-	padding-right: ceil((@gutter / 2));
-	position: relative;
-	text-align: center;
-	float: left;
-}
+
 /* GRID */
 
 // Grid options
@@ -68,7 +65,6 @@ HTML, BODY {
 @gutter: 30px;
 @row-dependency: true;
 
-
 // Define container
 
 .container {
@@ -81,14 +77,14 @@ HTML, BODY {
 // Make row
 
 .make-row(@row-dependency) {
-  margin-left:  ceil((@gutter / -2));
-  margin-right: floor((@gutter / -2));
+	margin-left:  ceil((@gutter / -2));
+	margin-right: floor((@gutter / -2));
 	& when (@row-dependency = true) {
-  		&:extend(.clear all);
+		&:extend(.clear all);
 	}
 }
 .row {
-  .make-row(@row-dependency);
+	.make-row(@row-dependency);
 }
 
 // Define column types and attributes
@@ -117,46 +113,53 @@ HTML, BODY {
 	& when (@type = pull) and (@index > 0) {
 		.col--@{class}-pull-@{index} {
 			right: percentage((@index / @columns));
-			// clear: left;
 		}
 	}
 	& when (@type = pull) and (@index = 0) {
 		.col--@{class}-pull-0 {
 			right: auto;
-			// clear: left;
 		}
 	}
 	& when (@type = offset) {
 		.col--@{class}-offset-@{index} {
 			margin-left: percentage((@index / @columns));
-			// clear: left;
 		}
 	}
 }
 
 // Generate columns
 
+[class*="col-"] {
+	padding-top: @column-spacing;
+	padding-bottom: @column-spacing;
+	padding-left:  floor((@gutter / 2));
+	padding-right: ceil((@gutter / 2));
+	position: relative;
+	text-align: center;
+	float: left;
+}
+
 .generate-columns(@index, @class, @type) when (@index >= 0) {
-  .define-columns(@index, @class, @type);
-  .generate-columns((@index - 1), @class, @type);
+	.define-columns(@index, @class, @type);
+	.generate-columns((@index - 1), @class, @type);
 }
 
-// Make grid
+// Generate grid
 
-.make-grid(@class) {
-  .generate-columns(@columns, @class, main);
-  .generate-columns(@columns, @class, pull);
-  .generate-columns(@columns, @class, push);
-  .generate-columns(@columns, @class, offset);
+.grid(@class) {
+	.generate-columns(@columns, @class, main);
+	.generate-columns(@columns, @class, pull);
+	.generate-columns(@columns, @class, push);
+	.generate-columns(@columns, @class, offset);
 }
 
+// Init grid
 
-.make-grid(lg);
+.grid(lg);
 
 @media @md{
-	.make-grid(md);
+	.grid(md);
 }
 @media @sm {
-	.make-grid(sm);
+	.grid(sm);
 }
-
